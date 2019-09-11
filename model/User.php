@@ -16,7 +16,7 @@ class User
 
     public function __construct()
     {
-        
+        $this->props = props;
     }
     public function __construct($user, $password){
 		$this->$user = $user ;
