@@ -7,7 +7,7 @@
 
 	try {
 
-		$pdo = new PDO("mysql:host=$server;dbname=$db,$username,$password");
+		$pdo = new PDO("mysql:host=$server;dbname=$db",$username,$password);
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		echo "Welcome my noob hacker ! :)";
 		
@@ -17,31 +17,34 @@
 
 
 
-	$username = $_GET['username'] ;
-	$password = $_GET['password'] ;
-
-	if(isset($username) && isset($password))
+	if(isset($_POST['login']))
 	{
-		if(empty($username) || empty($password))
+		if(empty($_POST["username"]) || empty($_POST["password"]))  
+           {  
+                $message = '<label>All fields are required</label>';  
+           }  
+		if(!empty($_POST["username"]) && !empty($_POST["password"]))
 		{
-			echo '<p class="text-danger">une erreur s\'est produite pendant votre identification.Vous devez remplir tous les champs</p>';
-		}
-		if(!empty($username) && !empty($password))
-		{
-			
-			$stmt = $pdo->prepare("SELECT * FROM user WHERE username = $username");
-			$stmt->execute($username);
-			$user = $stmt->fetch();
-
-			if ($user && password_verify($password))
-			{
-    			header('Location:home.html') ;
-    			exit ;
-			} else {
-
-				header('Location:login.html') ;
-    			exit ;
-			}
+			$query = "SELECT * FROM user WHERE username = :username AND password = :password";  
+                $statement = $pdo->prepare($query);  
+                $statement->execute(  
+                     array(  
+                          'username'     =>     $_POST["username"],  
+                          'password'     =>     $_POST["password"]  
+                     )  
+                );  
+                $count = $statement->rowCount();  
+                if($count > 0)  
+                {  
+                	session_start();
+                     $_SESSION["username"] = $_POST["username"];  
+                     //header("location:../home.html");  
+                     header('location:../hello.php') ;
+                }  
+                else  
+                {  
+                     $message = '<label>Wrong Data</label>';  
+                }  
 		}
 	}
 
