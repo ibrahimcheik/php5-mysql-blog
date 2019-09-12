@@ -39,7 +39,7 @@
                 	session_start();
                      $_SESSION["username"] = $_POST["username"];  
                      //header("location:../home.html");  
-                     header('location:../hello.php') ;
+                     header('location:../index.php') ;
                 }  
                 else  
                 {  
